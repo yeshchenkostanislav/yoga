@@ -1,6 +1,7 @@
 // tabs
 
 window.addEventListener('DOMContentLoaded', function () {
+
   let info = document.querySelector('.info-header'), // добавляем обвертку в которой все табы
     tab = document.querySelectorAll('.info-header-tab'), //табы которые внутри родителя
     tabContent = document.querySelectorAll('.info-tabcontent'); // контент который будет появлятся при клике на таб
@@ -116,3 +117,21 @@ for (let i = 0; i < linkNav.length; i++) {
     }
   }, false);
 }
+
+// modal
+
+let more = document.querySelector('.more'),
+    overlay = document.quetySelector('.overlay'),
+    close = document.quetySelector('.popup-close');
+
+more.addEventListener('click', function() {
+  overlay.style.display = 'block';
+  this.classList.add('more-splash');
+  document.body.style.overflow = 'hidden'; // запрещаем скролл страницы при открытии мод окна
+});
+
+close.addEventListener('click', function(){
+    overlay.style.display = 'none';
+    more.classList.remove('more-splash');
+    document.body.style.overflow = ''; // разрешает скролл страницы при открытии мод окна
+});
