@@ -10,9 +10,5 @@
 	"browser": true,
 	"devel": true,
 	"jquery": true,
-	"esversion": 6,
-	"eqeqeq": true,
-	"unused": true,
-	"white": true
-
+	"esversion": 6
 }

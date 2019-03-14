@@ -121,17 +121,24 @@ for (let i = 0; i < linkNav.length; i++) {
 // modal
 
 let more = document.querySelector('.more'),
-    overlay = document.quetySelector('.overlay'),
-    close = document.quetySelector('.popup-close');
+  overlay = document.querySelector('.overlay'),
+  tabs = document.querySelectorAll('.description-btn')
+close = document.querySelector('.popup-close');
 
-more.addEventListener('click', function() {
-  overlay.style.display = 'block';
-  this.classList.add('more-splash');
-  document.body.style.overflow = 'hidden'; // запрещаем скролл страницы при открытии мод окна
-});
-
-close.addEventListener('click', function(){
+function show(b) {
+  b.addEventListener('click', function () {
+    overlay.style.display = 'block';
+    this.classList.add('more-splash');
+    document.body.style.overflow = 'hidden'; // запрещаем скролл страницы при открытии мод окна
+  });
+  close.addEventListener('click', function () {
     overlay.style.display = 'none';
-    more.classList.remove('more-splash');
+    b.classList.remove('more-splash');
     document.body.style.overflow = ''; // разрешает скролл страницы при открытии мод окна
-});
+  });
+}
+show(more);
+
+for (let i = 0; i < tabs.length; i++) {
+  show(tabs[i]);
+}
