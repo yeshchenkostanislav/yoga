@@ -1,6 +1,6 @@
 // tabs
 
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', () => {
 
   let info = document.querySelector('.info-header'), // добавляем обвертку в которой все табы
     tab = document.querySelectorAll('.info-header-tab'), //табы которые внутри родителя
@@ -22,7 +22,7 @@ window.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  info.addEventListener('click', function (event) {
+  info.addEventListener('click', (event) => {
     let target = event.target;
     if (target && target.classList.contains('info-header-tab')) {
       for (let i = 0; i < tab.length; i++) {
@@ -90,7 +90,7 @@ let linkNav = document.querySelectorAll('[href^="#"]'), //выбираем вс�
   V = 0.5; // скорость, может иметь дробное значение через точку (чем меньше значение - тем больше скорость)
 
 for (let i = 0; i < linkNav.length; i++) {
-  linkNav[i].addEventListener('click', function (event) { //по клику на ссылку
+  linkNav[i].addEventListener('click', (event) => { //по клику на ссылку
 
     event.preventDefault(); //отменяем стандартное поведение
 
@@ -126,12 +126,12 @@ let more = document.querySelector('.more'),
 close = document.querySelector('.popup-close');
 
 function show(b) {
-  b.addEventListener('click', function () {
+  b.addEventListener('click', () => {
     overlay.style.display = 'block';
     this.classList.add('more-splash');
     document.body.style.overflow = 'hidden'; // запрещаем скролл страницы при открытии мод окна
   });
-  close.addEventListener('click', function () {
+  close.addEventListener('click', () => {
     overlay.style.display = 'none';
     b.classList.remove('more-splash');
     document.body.style.overflow = ''; // разрешает скролл страницы при открытии мод окна
