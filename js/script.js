@@ -81,64 +81,130 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   setClock('timer', deadline);
-});
 
+  // плавный скрол страницы на чистом JS
 
-// плавный скрол страницы на чистом JS
+  let linkNav = document.querySelectorAll('[href^="#"]'), //выбираем все ссылки к якорю на странице
+    V = 0.5; // скорость, может иметь дробное значение через точку (чем меньше значение - тем больше скорость)
 
-let linkNav = document.querySelectorAll('[href^="#"]'), //выбираем все ссылки к якорю на странице
-  V = 0.5; // скорость, может иметь дробное значение через точку (чем меньше значение - тем больше скорость)
+  for (let i = 0; i < linkNav.length; i++) {
+    linkNav[i].addEventListener('click', (event) => { //по клику на ссылку
 
-for (let i = 0; i < linkNav.length; i++) {
-  linkNav[i].addEventListener('click', (event) => { //по клику на ссылку
+      event.preventDefault(); //отменяем стандартное поведение
 
-    event.preventDefault(); //отменяем стандартное поведение
+      let w = window.pageYOffset, // производим прокрутка 
+        hash = this.href.replace(/[^#]*(.*)/, '$1'), // к id элемента, к которому нужно перейти
+        t = document.querySelector(hash).getBoundingClientRect().top, // отступ от окна браузера до id
+        start = null;
 
-    let w = window.pageYOffset, // производим прокрутка 
-      hash = this.href.replace(/[^#]*(.*)/, '$1'), // к id элемента, к которому нужно перейти
-      t = document.querySelector(hash).getBoundingClientRect().top, // отступ от окна браузера до id
-      start = null;
+      requestAnimationFrame(step);
 
-    requestAnimationFrame(step);
+      function step(time) {
 
-    function step(time) {
+        if (start === null) start = time;
+        let progress = time - start,
+          r = (t < 0 ? Math.max(w - progress / V, w + t) : Math.min(w + progress / V, w + t));
 
-      if (start === null) start = time;
-      let progress = time - start,
-        r = (t < 0 ? Math.max(w - progress / V, w + t) : Math.min(w + progress / V, w + t));
+        window.scrollTo(0, r);
 
-      window.scrollTo(0, r);
-
-      if (r != w + t) {
-        requestAnimationFrame(step);
-      } else {
-        location.hash = hash; // URL с хэшем
+        if (r != w + t) {
+          requestAnimationFrame(step);
+        } else {
+          location.hash = hash; // URL с хэшем
+        }
       }
-    }
-  }, false);
-}
+    }, false);
+  }
 
-// modal
+  // modal
 
-let more = document.querySelector('.more'),
-  overlay = document.querySelector('.overlay'),
-  tabs = document.querySelectorAll('.description-btn')
-close = document.querySelector('.popup-close');
+  let more = document.querySelector('.more'),
+    overlay = document.querySelector('.overlay'),
+    tabs = document.querySelectorAll('.description-btn')
+  close = document.querySelector('.popup-close');
 
-function show(b) {
-  b.addEventListener('click', () => {
-    overlay.style.display = 'block';
-    this.classList.add('more-splash');
-    document.body.style.overflow = 'hidden'; // запрещаем скролл страницы при открытии мод окна
+  function show(b) {
+    b.addEventListener('click', () => {
+      overlay.style.display = 'block';
+      b.classList.add('more-splash');
+      document.body.style.overflow = 'hidden'; // запрещаем скролл страницы при открытии мод окна
+    });
+    close.addEventListener('click', () => {
+      overlay.style.display = 'none';
+      b.classList.remove('more-splash');
+      document.body.style.overflow = ''; // разрешает скролл страницы при открытии мод окна
+    });
+  }
+  show(more);
+
+  for (let i = 0; i < tabs.length; i++) {
+    show(tabs[i]);
+  }
+
+
+  // form
+
+  let message = {
+    loading: 'Загрузка...',
+    success: 'Спасибо! Скоро мы с вами свяжемся!',
+    failure: 'Что-то пошло не так...'
+  };
+
+  let form = document.querySelector('.main-form'),
+    input = form.querySelectorAll('input'),
+    inputTel = form.querySelectorAll('.tel'),
+    statusMessage = document.createElement('div');
+
+  statusMessage.classList.add('status');
+
+  form.addEventListener('submit', (e) => {
+    event.preventDefault();
+    form.appendChild(statusMessage);
+
+    let request = new XMLHttpRequest();
+    request.open('POST', 'server.php');
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    let formData = new FormData(form);
+    request.send(formData);
+
+    request.addEventListener('readystatechange', function () {
+      if (request.readyState < 4) {
+        statusMessage.innerHTML = message.loading;
+      } else if (request.readyState === 4 && request.status == 200) {
+        statusMessage.innerHTML = massage.success;
+      } else {
+        statusMessage.innerHTML = massage.failure;
+      }
+    });
+    input.forEach((item) => {
+      item.value = '';
+    });
+
   });
-  close.addEventListener('click', () => {
-    overlay.style.display = 'none';
-    b.classList.remove('more-splash');
-    document.body.style.overflow = ''; // разрешает скролл страницы при открытии мод окна
-  });
-}
-show(more);
 
-for (let i = 0; i < tabs.length; i++) {
-  show(tabs[i]);
-}
+  inputTel.forEach(function (item) {
+    // Проверяем фокус
+    item.addEventListener('focus', function () {
+      // Если там ничего нет или есть, но левое
+      if (!/^\+\d*$/.test(item.value))
+        // То вставляем знак плюса как значение
+        item.value = '+';
+    });
+
+    item.addEventListener('keypress', function (e) {
+      // Отменяем ввод не цифр
+      if (!/\d/.test(e.key)) {
+        e.preventDefault();
+        alert("Прошу вводить только цыфры")
+      } else {
+        if (item.value.length == 2) item.value = item.value + "(";
+        if (item.value.length == 6) item.value = item.value + ")-";
+        if (item.value.length == 11) item.value = item.value + "-";
+        if (item.value.length == 14) item.value = item.value + "-";
+        if (item.value.length > 16) item.value = item.value.substring(0, 16);
+      }
+    });
+  })
+
+});
