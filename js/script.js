@@ -148,51 +148,70 @@ window.addEventListener('DOMContentLoaded', () => {
     loading: 'Загрузка...',
     success: 'Спасибо! Скоро мы с вами свяжемся!',
     failure: 'Что-то пошло не так...'
-  };
+  }
 
-  let form = document.querySelector('.main-form'),
-    input = form.querySelectorAll('input'),
-    inputTel = form.querySelectorAll('.tel'),
+  let form = document.querySelectorAll('form'),
+    input = document.querySelectorAll('input'),
+    inputTel = document.querySelectorAll('.tel'),
     statusMessage = document.createElement('div');
 
   statusMessage.classList.add('status');
 
-  form.addEventListener('submit', (e) => {
-    event.preventDefault();
-    form.appendChild(statusMessage);
 
-    let request = new XMLHttpRequest();
-    request.open('POST', 'server.php');
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  form.forEach((item) => {
 
-    let formData = new FormData(form);
-    request.send(formData);
+    item.addEventListener('submit', (e) => {
+      e.preventDefault();
+      item.appendChild(statusMessage);
 
-    request.addEventListener('readystatechange', function () {
-      if (request.readyState < 4) {
-        statusMessage.innerHTML = message.loading;
-      } else if (request.readyState === 4 && request.status == 200) {
-        statusMessage.innerHTML = massage.success;
-      } else {
-        statusMessage.innerHTML = massage.failure;
-      }
+      let request = new XMLHttpRequest();
+      request.open('POST', 'server.php');
+      request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+
+
+
+
+      let formData = new FormData(item);
+
+      let obj = {};
+      formData.forEach((value, key) => {
+        obj[key] = value;
+      });
+      let json = JSON.stringify(obj);
+
+      request.send(json);
+
+      request.addEventListener('readystatechange', () => {
+        if (request.readyState < 4) {
+          statusMessage.innerHTML = message.loading;
+        } else if (request.readyState === 4 && request.status == 200) {
+          statusMessage.innerHTML = "<img src='../img/succses.png'>"
+
+          function func() { // // удаляем надпись о удачной отправке сообления, при закрытии мод окна
+            statusMessage.innerHTML = "";
+          }
+
+          setTimeout(func, 4000);
+
+        } else {
+          statusMessage.innerHTML = message.failure;
+        }
+      });
+      input.forEach((item) => {
+        item.value = '';
+      });
     });
-    input.forEach((item) => {
-      item.value = '';
-    });
-
   });
-
   inputTel.forEach(function (item) {
     // Проверяем фокус
-    item.addEventListener('focus', function () {
+    item.addEventListener('focus', () => {
       // Если там ничего нет или есть, но левое
       if (!/^\+\d*$/.test(item.value))
         // То вставляем знак плюса как значение
         item.value = '+';
     });
 
-    item.addEventListener('keypress', function (e) {
+    item.addEventListener('keypress', (e) => {
       // Отменяем ввод не цифр
       if (!/\d/.test(e.key)) {
         e.preventDefault();
