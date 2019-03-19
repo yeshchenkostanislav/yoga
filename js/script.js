@@ -93,7 +93,7 @@ window.addEventListener('DOMContentLoaded', () => {
       event.preventDefault(); //отменяем стандартное поведение
 
       let w = window.pageYOffset, // производим прокрутка 
-        hash = this.href.replace(/[^#]*(.*)/, '$1'), // к id элемента, к которому нужно перейти
+        hash = linkNav[i].href.replace(/[^#]*(.*)/, '$1'), // к id элемента, к которому нужно перейти
         t = document.querySelector(hash).getBoundingClientRect().top, // отступ от окна браузера до id
         start = null;
 
@@ -154,54 +154,66 @@ window.addEventListener('DOMContentLoaded', () => {
     input = document.querySelectorAll('input'),
     inputTel = document.querySelectorAll('.tel'),
     statusMessage = document.createElement('div');
-
   statusMessage.classList.add('status');
 
 
-  form.forEach((item) => {
+  form.forEach(function sendForm(item) {
 
     item.addEventListener('submit', (e) => {
       e.preventDefault();
       item.appendChild(statusMessage);
-
-      let request = new XMLHttpRequest();
-      request.open('POST', 'server.php');
-      request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-
-
-
-
       let formData = new FormData(item);
 
-      let obj = {};
-      formData.forEach((value, key) => {
-        obj[key] = value;
-      });
-      let json = JSON.stringify(obj);
+      function postData(data) {
+        return new Promise(function (resolve, reject) {
+          let request = new XMLHttpRequest();
+          request.open('POST', 'server.php');
+          request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 
-      request.send(json);
-
-      request.addEventListener('readystatechange', () => {
-        if (request.readyState < 4) {
-          statusMessage.innerHTML = message.loading;
-        } else if (request.readyState === 4 && request.status == 200) {
-          statusMessage.innerHTML = "<img src='../img/succses.png'>"
-
-          function func() { // // удаляем надпись о удачной отправке сообления, при закрытии мод окна
-            statusMessage.innerHTML = "";
+          request.onreadystatechange = function () {
+            if (request.readyState < 4) {
+              resolve()
+            } else if (request.readyState === 4) {
+              if (request.status == 200 && request.status < 300) {
+                resolve()
+              } else {
+                reject()
+              }
+            }
           }
+          request.send(data);
+        })
+      }
 
-          setTimeout(func, 4000);
+      function clearInput() {
+        input.forEach((item) => {
+          item.value = '';
+        });
+      };
 
-        } else {
-          statusMessage.innerHTML = message.failure;
-        }
-      });
-      input.forEach((item) => {
-        item.value = '';
-      });
+      postData(formData)
+        .then(() => {
+          /*           statusMessage.textContent = message.loading; */
+          statusMessage.textContent = "<img src='../img/images.png'>";
+        })
+        .then(() => {
+          /*           statusMessage.textContent = message.success; */
+          statusMessage.innerHTML = "<img src='../img/tossl.png'>";
+          setTimeout(func, 3000);
+        })
+        .catch(() => {
+          /*           statusMessage.textContent = message.failure; */
+          statusMessage.innerHTML = "<img src='../img/Status-dialog-error-symbolic-icon.png'>";
+        })
+        .then(clearInput)
     });
   });
+
+  function func() { // // удаляем надпись о удачной отправке сообления, при закрытии мод окна
+    statusMessage.innerHTML = "";
+  }
+
+
   inputTel.forEach(function (item) {
     // Проверяем фокус
     item.addEventListener('focus', () => {
@@ -224,6 +236,5 @@ window.addEventListener('DOMContentLoaded', () => {
         if (item.value.length > 16) item.value = item.value.substring(0, 16);
       }
     });
-  })
-
+  });
 });
