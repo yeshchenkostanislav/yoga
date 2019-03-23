@@ -1,5 +1,4 @@
 function form() {
-  // form
 
   let message = {
     loading: 'Загрузка...',
@@ -27,7 +26,7 @@ function form() {
           request.open('POST', 'server.php');
           request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 
-          request.onreadystatechange = function () {
+          request.onreadystatechange = () => {
             if (request.readyState < 4) {
               resolve()
             } else if (request.readyState === 4) {
@@ -50,28 +49,25 @@ function form() {
 
       postData(formData)
         .then(() => {
-          /*           statusMessage.textContent = message.loading; */
-          statusMessage.textContent = "<img src='../img/images.png'>";
+          statusMessage.textContent = message.loading;
         })
         .then(() => {
-          /*           statusMessage.textContent = message.success; */
-          statusMessage.innerHTML = "<img src='../img/tossl.png'>";
+          statusMessage.innerHTML = message.success;
           setTimeout(func, 3000);
         })
         .catch(() => {
-          /*           statusMessage.textContent = message.failure; */
-          statusMessage.innerHTML = "<img src='../img/Status-dialog-error-symbolic-icon.png'>";
+          statusMessage.innerHTML = message.failure;
         })
         .then(clearInput)
     });
   });
 
-  function func() { // // удаляем надпись о удачной отправке сообления, при закрытии мод окна
+  function func() {
     statusMessage.innerHTML = "";
   }
 
 
-  inputTel.forEach(function (item) {
+  inputTel.forEach((item) => {
     // Проверяем фокус
     item.addEventListener('focus', () => {
       // Если там ничего нет или есть, но левое

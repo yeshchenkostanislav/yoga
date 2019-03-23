@@ -1,11 +1,10 @@
 function timer() {
-  //timer 
 
   let deadline = '2019-04-21';
 
   function getTimeRemaining(endtime) {
-    let t = Date.parse(endtime) - Date.parse(new Date()), // Date.parse переводит в колличество секунд
-      seconds = Math.floor((t / 1000) % 60), // Math.floor округляет до целого числа
+    let t = Date.parse(endtime) - Date.parse(new Date()),
+      seconds = Math.floor((t / 1000) % 60),
       minutes = Math.floor((t / 1000 / 60) % 60),
       hours = Math.floor((t / (1000 * 60 * 60)));
 

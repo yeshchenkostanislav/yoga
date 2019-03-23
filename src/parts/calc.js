@@ -1,5 +1,4 @@
 function calc() {
-  // Calc
 
   let persons = document.querySelectorAll('.counter-block-input')[0],
     restDays = document.querySelectorAll('.counter-block-input')[1],
@@ -11,7 +10,7 @@ function calc() {
 
   totalValue.innerHTML = 0;
 
-  persons.addEventListener('input', function (e) {
+  persons.addEventListener('input', (e) => {
 
     this.value = e.target.value.replace(/[^0-9]+/g, '');
 
@@ -25,7 +24,7 @@ function calc() {
     }
   });
 
-  restDays.addEventListener('input', function (e) {
+  restDays.addEventListener('input', (e) => {
     this.value = e.target.value.replace(/[^0-9]+/g, '');
     daysSum = +this.value;
     total = (daysSum + personsSum) * 4000;
@@ -34,7 +33,7 @@ function calc() {
       totalValue.innerHTML = 0;
     } else {
       totalValue.innerHTML = total * place.options[place.selectedIndex].value;
-      place.addEventListener('change', function () {
+      place.addEventListener('change', () => {
         totalValue.innerHTML = total * place.options[place.selectedIndex].value;
       })
     }

@@ -1,17 +1,16 @@
 function scrol() {
-  // плавный скрол страницы на чистом JS
 
-  let linkNav = document.querySelectorAll('[href^="#"]'), //выбираем все ссылки к якорю на странице
-    V = 0.5; // скорость, может иметь дробное значение через точку (чем меньше значение - тем больше скорость)
+  let linkNav = document.querySelectorAll('[href^="#"]'),
+    V = 0.5;
 
   for (let i = 0; i < linkNav.length; i++) {
-    linkNav[i].addEventListener('click', (event) => { //по клику на ссылку
+    linkNav[i].addEventListener('click', (event) => {
 
-      event.preventDefault(); //отменяем стандартное поведение
+      event.preventDefault();
 
-      let w = window.pageYOffset, // производим прокрутка 
-        hash = linkNav[i].href.replace(/[^#]*(.*)/, '$1'), // к id элемента, к которому нужно перейти
-        t = document.querySelector(hash).getBoundingClientRect().top, // отступ от окна браузера до id
+      let w = window.pageYOffset,
+        hash = linkNav[i].href.replace(/[^#]*(.*)/, '$1'),
+        t = document.querySelector(hash).getBoundingClientRect().top,
         start = null;
 
       requestAnimationFrame(step);
@@ -27,7 +26,7 @@ function scrol() {
         if (r != w + t) {
           requestAnimationFrame(step);
         } else {
-          location.hash = hash; // URL с хэшем
+          location.hash = hash;
         }
       }
     }, false);

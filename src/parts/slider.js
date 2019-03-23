@@ -1,5 +1,4 @@
 function slider() {
-  //slider 
 
   let slideIndex = 1,
     slides = document.querySelectorAll('.slider-item'),
@@ -35,11 +34,11 @@ function slider() {
     showSlides(slideIndex = n);
   }
 
-  prev.addEventListener('click', function () {
+  prev.addEventListener('click', () => {
     plusSlides(-1);
   });
 
-  next.addEventListener('click', function () {
+  next.addEventListener('click', () => {
     plusSlides(1);
   });
 

@@ -1,9 +1,9 @@
 function tabs() {
-  let info = document.querySelector('.info-header'), // добавляем обвертку в которой все табы
-    tab = document.querySelectorAll('.info-header-tab'), //табы которые внутри родителя
-    tabContent = document.querySelectorAll('.info-tabcontent'); // контент который будет появлятся при клике на таб
+  let info = document.querySelector('.info-header'),
+    tab = document.querySelectorAll('.info-header-tab'),
+    tabContent = document.querySelectorAll('.info-tabcontent');
 
-  function hideTabContent(a) { //скрываем все табы с инф кроме первого  hideTabContent(1)
+  function hideTabContent(a) {
     for (let i = a; i < tabContent.length; i++) {
       tabContent[i].classList.remove('show');
       tabContent[i].classList.add('hide');
