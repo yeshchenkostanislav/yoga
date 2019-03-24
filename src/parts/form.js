@@ -4,7 +4,7 @@ function form() {
     loading: 'Загрузка...',
     success: 'Спасибо! Скоро мы с вами свяжемся!',
     failure: 'Что-то пошло не так...'
-  }
+  };
 
   let form = document.querySelectorAll('form'),
     input = document.querySelectorAll('input'),
@@ -21,7 +21,7 @@ function form() {
       let formData = new FormData(item);
 
       function postData(data) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
           let request = new XMLHttpRequest();
           request.open('POST', 'server.php');
           request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');

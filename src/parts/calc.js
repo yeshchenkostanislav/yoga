@@ -1,11 +1,10 @@
 function calc() {
 
+
   let persons = document.querySelectorAll('.counter-block-input')[0],
     restDays = document.querySelectorAll('.counter-block-input')[1],
     place = document.getElementById('select'),
     totalValue = document.getElementById('total'),
-    personsSum = 0,
-    daysSum = 0,
     total = 0;
 
   totalValue.innerHTML = 0;
@@ -15,26 +14,34 @@ function calc() {
     this.value = e.target.value.replace(/[^0-9]+/g, '');
 
     personsSum = +this.value;
-    total = (daysSum + personsSum) * 4000;
+    total = ((persons.value + restDays.value) * 4000 * place.options[place.selectedIndex].value);
 
-    if (restDays.value == '' || personsSum == '') {
+    if (persons.value == '' || restDays.value == '' || persons.value == 0 || restDays.value == 0) {
       totalValue.innerHTML = 0;
     } else {
-      totalValue.innerHTML = total * place.options[place.selectedIndex].value;
+      totalValue.innerHTML = total;
     }
   });
 
   restDays.addEventListener('input', (e) => {
     this.value = e.target.value.replace(/[^0-9]+/g, '');
     daysSum = +this.value;
-    total = (daysSum + personsSum) * 4000;
+    total = ((persons.value + restDays.value) * 4000 * place.options[place.selectedIndex].value);
 
-    if (persons.value == '' || daysSum == '') {
+    if (persons.value == '' || restDays.value == '' || persons.value == 0 || restDays.value == 0) {
       totalValue.innerHTML = 0;
     } else {
-      totalValue.innerHTML = total * place.options[place.selectedIndex].value;
       place.addEventListener('change', () => {
-        totalValue.innerHTML = total * place.options[place.selectedIndex].value;
+
+        total = ((persons.value + restDays.value) * 4000 * place.options[place.selectedIndex].value);
+
+        console.log(persons.value, restDays.value, place.options[place.selectedIndex].value);
+
+        if (persons.value == '' || restDays.value == '' || persons.value == 0 || restDays.value == 0) {
+          totalValue.innerHTML = 0;
+        } else {
+          totalValue.innerHTML = total;
+        }
       })
     }
   });
