@@ -6,10 +6,6 @@ function calc() {
     place = document.getElementById('select'),
     totalValue = document.getElementById('total');
 
-
-  console.log(place);
-
-
   totalValue.innerHTML = 0;
 
   persons.addEventListener('input', (e) => {
